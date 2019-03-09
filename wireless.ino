@@ -9,8 +9,7 @@ int R1 = 8;
 int R2 = 9;
 int R3 = 10;
 int R4 = 11;
-int Sarm1 = 7;
-int Sarm2 = 6;
+
 
 boolean newData = false;
 
@@ -18,9 +17,7 @@ void setup() {
    pinMode(R1,OUTPUT);
    pinMode(R2,OUTPUT);
    pinMode(R3,OUTPUT);
-   pinMode(R4,OUTPUT);
-   arm1.attach(Sarm1);
-   arm2.attach(Sarm2);
+   pinMode(R4,OUTPUT);  
    //set the serial communication rate
    Serial.begin(9600);
    stopall_motors();
@@ -64,13 +61,13 @@ void recvWithEndMarker() {
 
 void showNewData() {
  if (newData == true) {
- Serial.print("This just in ... ");
+ Serial.print("Recieved Command!");
  String s = receivedChars;
  int val = s.toInt();
 if (val == 1)
   {
     //Auto Mode
-    Serial.println("FORWARD");
+    Serial.println("AUTO FORWARD");
     stopall_motors();    
     digitalWrite(R1,LOW);
     digitalWrite(R3,LOW);
@@ -88,7 +85,7 @@ if (val == 1)
     /*********For Backward Motion*********/
   else if(val == 3)
   {
-    Serial.println("BACK");
+    Serial.println("AUTO BACK");
     stopall_motors();    
     digitalWrite(R2,LOW);
     digitalWrite(R4,LOW);   
@@ -105,7 +102,7 @@ if (val == 1)
    /*********Right*********/
   else if(val == 5)
   {
-    Serial.println("RIGHT");
+    Serial.println("AUTO RIGHT");
     stopall_motors();       
     digitalWrite(R3,LOW);
   }
@@ -120,7 +117,7 @@ if (val == 1)
    /*********Left*********/
   else if(val == 7)
   {
-    Serial.println("LEFT");
+    Serial.println("AUTO LEFT");
     stopall_motors();       
     digitalWrite(R1,LOW);    
   }
@@ -131,18 +128,6 @@ if (val == 1)
     digitalWrite(R1,LOW);   
     delay(100);  
     stopall_motors();
-  }
-  else if(val >= 100 && val <= 280){
-    //first arm
-    Serial.println("ARM1 :");
-    Serial.println(val-100); 
-    arm1.write(val);
-  }
-  else if(val >= 300 && val <= 480){
-    //second arm
-    Serial.println("ARM2 :");
-    Serial.println(val-300); 
-    arm2.write(val);
   }
   else
   {
