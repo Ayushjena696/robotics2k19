@@ -1,32 +1,11 @@
-#include <Servo.h>
-const byte numChars = 32;
-char receivedChars[numChars]; // an array to store the received data
-Servo arm1;
-Servo arm2;
-
-//MOTORS
-int R1 = 8;
-int R2 = 9;
-int R3 = 10;
-int R4 = 11;
+char data = 0;            //Variable for storing received data
+//Relay Pins
+int R1 = 8; // IN1
+int R2 = 9; // IN2
+int R3 = 10; //IN3
+int R4 = 11; //IN4
 
 
-boolean newData = false;
-
-void setup() {
-   pinMode(R1,OUTPUT);
-   pinMode(R2,OUTPUT);
-   pinMode(R3,OUTPUT);
-   pinMode(R4,OUTPUT);  
-   //set the serial communication rate
-   Serial.begin(9600);
-   stopall_motors();
-}
-
-void loop() {
- recvWithEndMarker();
- showNewData();
-}
 
 void stopall_motors(){
   digitalWrite(R1,HIGH);
@@ -35,105 +14,48 @@ void stopall_motors(){
   digitalWrite(R4,HIGH);
 }
 
-void recvWithEndMarker() {
- static byte ndx = 0;
- char endMarker = '*';
- char rc;
- 
- // if (Serial.available() > 0) {
-           while (Serial.available() > 0 && newData == false) {
- rc = Serial.read();
 
- if (rc != endMarker) {
- receivedChars[ndx] = rc;
- ndx++;
- if (ndx >= numChars) {
- ndx = numChars - 1;
- }
- }
- else {
- receivedChars[ndx] = '\0'; // terminate the string
- ndx = 0;
- newData = true;
- }
- }
+void setup()
+{
+   Serial.begin(9600);   //Sets the baud for serial data transmission                               
+    
+   pinMode(R1,OUTPUT);
+   pinMode(R2,OUTPUT);
+   pinMode(R3,OUTPUT);
+   pinMode(R4,OUTPUT);  
+
+   stopall_motors();
 }
+void loop()
+{
+   if(Serial.available() > 0)      // Send data only when you receive data:
+   {
+      data = Serial.read();        //Read the incoming data & store into data
+      //Serial.print(data);          //Print Value inside data in Serial monitor
 
-void showNewData() {
- if (newData == true) {
- Serial.print("Recieved Command!");
- String s = receivedChars;
- int val = s.toInt();
-if (val == 1)
-  {
-    //Auto Mode
-    Serial.println("AUTO FORWARD");
-    stopall_motors();    
-    digitalWrite(R1,LOW);
-    digitalWrite(R3,LOW);
-  }
-  else if(val == 2)
-  {
-    Serial.println("MANUAL FWD");
-    stopall_motors();    
-    digitalWrite(R1,LOW);
-    digitalWrite(R3,LOW);
-    delay(100);  
-    stopall_motors();
-  }
- 
-    /*********For Backward Motion*********/
-  else if(val == 3)
-  {
-    Serial.println("AUTO BACK");
-    stopall_motors();    
-    digitalWrite(R2,LOW);
-    digitalWrite(R4,LOW);   
-  }
-  else if(val == 4)
-  {
-    Serial.println("MANUAL BACK");
-    stopall_motors();    
-    digitalWrite(R2,LOW);
-    digitalWrite(R4,LOW);
-    delay(100);  
-    stopall_motors();
-  }
-   /*********Right*********/
-  else if(val == 5)
-  {
-    Serial.println("AUTO RIGHT");
-    stopall_motors();       
-    digitalWrite(R3,LOW);
-  }
-  else if(val == 6)
-  {
-    Serial.println("MANUAL RIGHT");
-    stopall_motors();    
-    digitalWrite(R3,LOW);   
-    delay(100);  
-    stopall_motors();
-  }
-   /*********Left*********/
-  else if(val == 7)
-  {
-    Serial.println("AUTO LEFT");
-    stopall_motors();       
-    digitalWrite(R1,LOW);    
-  }
-   else if(val == 8)
-  {
-    Serial.println("MANUAL LEFT");
-    stopall_motors();    
-    digitalWrite(R1,LOW);   
-    delay(100);  
-    stopall_motors();
-  }
-  else
-  {
-    Serial.println("STOP");
-    stopall_motors(); 
-  }
- newData = false;
- }
+           
+      if(data == 'F'){        
+        digitalWrite(R1,LOW);
+        digitalWrite(R2,HIGH);
+        digitalWrite(R3,LOW); 
+        digitalWrite(R4,HIGH);
+      }else if(data == 'B'){ 
+        digitalWrite(R1,HIGH);
+        digitalWrite(R2,LOW);
+        digitalWrite(R3,HIGH);
+        digitalWrite(R4,LOW);                  
+      }else if(data == 'R'){
+        digitalWrite(R1,HIGH);
+        digitalWrite(R2,HIGH);
+        digitalWrite(R3,LOW);
+        digitalWrite(R4,HIGH);
+      }else if(data == 'L'){
+        digitalWrite(R1,LOW);
+        digitalWrite(R2,HIGH);
+        digitalWrite(R3,HIGH);
+        digitalWrite(R4,HIGH);
+      }else{
+        stopall_motors();      
+      }
+   }
 }
