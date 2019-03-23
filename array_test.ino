@@ -1,0 +1,49 @@
+/* 
+Arduino pin       8-Array sensor Pin
+A0                  D0
+A1                  D1
+A3                  D2
+A3                  D3
+A4                  D4
+A5                  D5
+8                   D6
+9                   D7
+You can see the output in the serial monitor.
+*/
+void setup() {
+  pinMode(8, INPUT); //Arduino pins which are connected with the sensor are declared as INPUT pins
+  pinMode(9, INPUT);
+  pinMode(A0, INPUT);
+  pinMode(A1, INPUT);
+  pinMode(A2, INPUT);
+  pinMode(A3, INPUT);
+  pinMode(A4, INPUT);
+  pinMode(A5, INPUT);
+  Serial.begin(9600);
+
+}
+
+void loop() {
+int a[8]; // An array of 8 elements are created as there are total 8 sensors in the Sensor Module
+a[0]=digitalRead(A0); // Digital value of the input pin are measured and stored in the array
+a[1]=digitalRead(A1);
+a[2]=digitalRead(A2);
+a[3]=digitalRead(A3);
+a[4]=digitalRead(A4);
+a[5]=digitalRead(A5);
+a[6]=digitalRead(8);
+a[7]=digitalRead(9);
+Serial.print(a[0]);// results are printed according to the sensor value
+Serial.print(a[1]);
+Serial.print(a[2]);
+Serial.print(a[3]);
+Serial.print(a[4]);
+Serial.print(a[5]);
+Serial.print(a[6]);
+Serial.print(a[7]);
+Serial.print("\t");
+Serial.println(" ");
+delay(100);
+
+
+}
