@@ -8,7 +8,7 @@
 #define right_enable 6
 
 
-const int irPins[6] = {A1, A2, A3, A4, A5, 8}; //Though 8 sensors are there but 6 sensor are used in this code
+const int irPins[6] = {A1, A2, A3, A4, A5, 8}; //Though 8 sensors are there but only 6 sensor are used in this code
 int irSensorDigital[6] = {0, 0, 0, 0, 0, 0}; //Set the basic value to 0 for all the sensors
 int irSensors = B000000; //The value of the sensors are stored in the variable isSensors
 int count = 0; //For PID calculation
